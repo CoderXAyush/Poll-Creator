@@ -7,7 +7,7 @@ A full-stack polling application built with **Go** and **React**. Create polls, 
 | Layer    | Technology                  |
 | -------- | --------------------------- |
 | Backend  | Go (net/http, no framework) |
-| Frontend | React 18, React Router, Vite |
+| Frontend | React 18, Vite |
 | Serve    | Nginx (reverse proxy + SPA) |
 | Infra    | Docker, Docker Compose      |
 
