@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+frontend/dist/
+backend/poll-api
+
+# Environment
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Docker
+docker-compose.override.yml
+
+# Go
+backend/vendor/
+*.exe
+*.test
+*.out
+
+# Logs
+*.log
+npm-debug.log*
