@@ -107,3 +107,79 @@ npm run dev
 
 Vite dev server proxies `/api` requests to `localhost:5001`.
 
+## 🚀 Deployment
+
+### Deploy to Railway
+
+Railway provides the easiest deployment for this Docker-based application:
+
+#### Quick Deploy (Recommended)
+```bash
+# Run our automated deployment script
+./scripts/deploy-railway.sh
+```
+
+#### Manual Deploy
+1. **Create Railway Account**
+   - Go to [railway.app](https://railway.app)
+   - Sign up with your GitHub account
+
+2. **Deploy Your Repository**
+   ```bash
+   # Option 1: Deploy from GitHub (Recommended)
+   # Connect your GitHub repo at railway.app/new
+
+   # Option 2: Deploy using Railway CLI
+   npm install -g @railway/cli
+   railway login
+   railway init
+   railway up
+   ```
+
+3. **Configure Environment Variables**
+   - In Railway dashboard, go to your project
+   - Add these environment variables:
+     - `PORT=8080`
+     - `NODE_ENV=production`
+
+4. **Your App Will Be Live!**
+   - Railway provides a public URL like `https://poll-creator-production.up.railway.app`
+   - The app serves both frontend and API from the same URL
+
+### Alternative Deployment Options
+
+<details>
+<summary>🔧 Render</summary>
+
+1. Connect your GitHub repo to [Render](https://render.com)
+2. Choose "Web Service"
+3. Set build command: `docker build -f Dockerfile.production .`
+4. Set start command: `./start.sh`
+5. Add environment variable: `PORT=10000`
+
+</details>
+
+<details>
+<summary>🌊 DigitalOcean App Platform</summary>
+
+1. Create a new app in [DigitalOcean](https://cloud.digitalocean.com/apps)
+2. Connect your GitHub repository
+3. Choose "Dockerfile" build method
+4. Set Dockerfile path: `Dockerfile.production`
+5. Configure environment variables as needed
+
+</details>
+
+<details>
+<summary>🐳 Docker Self-Hosting</summary>
+
+```bash
+# Build production image
+docker build -f Dockerfile.production -t poll-creator .
+
+# Run container
+docker run -p 8080:8080 -e PORT=8080 poll-creator
+```
+
+</details>
+

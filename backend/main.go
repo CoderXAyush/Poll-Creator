@@ -6,6 +6,8 @@ import (
 	"log"
 	"math"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
@@ -397,6 +399,17 @@ func (s *Server) handleClosePoll(w http.ResponseWriter, r *http.Request, pollID 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	path := strings.TrimSuffix(r.URL.Path, "/")
 
+	// API routes
+	if strings.HasPrefix(path, "/api") {
+		s.handleAPIRoutes(w, r, path)
+		return
+	}
+
+	// Static file serving for frontend
+	s.handleStaticFiles(w, r)
+}
+
+func (s *Server) handleAPIRoutes(w http.ResponseWriter, r *http.Request, path string) {
 	// GET /api/health
 	if path == "/api/health" && r.Method == http.MethodGet {
 		s.handleHealth(w, r)
@@ -444,7 +457,64 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	writeError(w, http.StatusNotFound, "Not found")
+	writeError(w, http.StatusNotFound, "API endpoint not found")
+}
+
+func (s *Server) handleStaticFiles(w http.ResponseWriter, r *http.Request) {
+	// Check if static directory exists
+	staticDir := "./static"
+	if _, err := os.Stat(staticDir); os.IsNotExist(err) {
+		// If static directory doesn't exist, show a simple message
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "text/html")
+		fmt.Fprint(w, `
+			<!DOCTYPE html>
+			<html>
+			<head>
+				<title>Poll Creator API</title>
+			</head>
+			<body>
+				<h1>🗳️ Poll Creator API</h1>
+				<p>Backend API is running successfully!</p>
+				<p>API endpoints are available at <code>/api/*</code></p>
+				<ul>
+					<li><a href="/api/health">Health Check</a></li>
+					<li><a href="/api/polls">List Polls</a></li>
+				</ul>
+			</body>
+			</html>
+		`)
+		return
+	}
+
+	// Serve static files
+	requestPath := r.URL.Path
+	if requestPath == "/" {
+		requestPath = "/index.html"
+	}
+
+	filePath := filepath.Join(staticDir, requestPath)
+
+	// Security check: ensure the file is within staticDir
+	if !strings.HasPrefix(filePath, staticDir+string(os.PathSeparator)) && filePath != staticDir+"/index.html" {
+		writeError(w, http.StatusNotFound, "Not found")
+		return
+	}
+
+	// Check if file exists
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
+		// For SPA routing, serve index.html for non-API routes
+		indexPath := filepath.Join(staticDir, "index.html")
+		if _, indexErr := os.Stat(indexPath); indexErr == nil {
+			http.ServeFile(w, r, indexPath)
+			return
+		}
+		writeError(w, http.StatusNotFound, "Not found")
+		return
+	}
+
+	// Serve the file
+	http.ServeFile(w, r, filePath)
 }
 
 // ─── Main ──────────────────────────────────────────────────────────────────────
@@ -455,9 +525,27 @@ func main() {
 
 	server := &Server{store: store}
 
-	port := "5000"
+	// Get port from environment variable, default to 5000
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "5000"
+	}
+
 	log.Printf("🚀 Poll Creator API (Go) running on http://0.0.0.0:%s", port)
+	log.Printf("📁 Static files will be served from ./static (if available)")
+	log.Printf("🔧 Environment: %s", getEnv())
+	
 	if err := http.ListenAndServe(":"+port, corsMiddleware(server)); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func getEnv() string {
+	if env := os.Getenv("NODE_ENV"); env != "" {
+		return env
+	}
+	if os.Getenv("PORT") != "" {
+		return "production"
+	}
+	return "development"
 }

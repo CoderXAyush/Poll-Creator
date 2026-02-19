@@ -73,10 +73,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Build with Docker Compose
+    - name: Build Development Containers
       run: docker compose build
     
-    - name: Test container startup
+    - name: Test Development Containers
       run: |
         docker compose up -d
         sleep 30
@@ -85,6 +85,19 @@ jobs:
         # Test frontend
         curl -f http://localhost:3001/ || exit 1
         docker compose down
+    
+    - name: Build Production Container
+      run: docker build -f Dockerfile.production -t poll-creator-prod .
+    
+    - name: Test Production Container
+      run: |
+        docker run -d -p 8080:8080 --name poll-test poll-creator-prod
+        sleep 30
+        # Test production build
+        curl -f http://localhost:8080/api/health || exit 1
+        curl -f http://localhost:8080/ || exit 1
+        docker stop poll-test
+        docker rm poll-test
 
   security-scan:
     name: Security Scan

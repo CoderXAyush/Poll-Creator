@@ -8,6 +8,8 @@ backend/poll-api
 # Environment
 .env
 .env.*
+.env.production
+.env.railway
 
 # OS
 .DS_Store
