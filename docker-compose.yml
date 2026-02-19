@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: poll-api
     ports:
-      - "5000:5000"
+      - "5001:5000"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:5000/api/health"]
@@ -19,7 +19,7 @@ services:
       dockerfile: Dockerfile
     container_name: poll-frontend
     ports:
-      - "3000:80"
+      - "3001:80"
     depends_on:
       backend:
         condition: service_healthy
