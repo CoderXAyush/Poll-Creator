@@ -150,8 +150,6 @@ Vercel provides excellent support for React applications with serverless backend
 
 ### Alternative Deployment Options
 
-### Alternative Deployment Options
-
 <details>
 <summary>🚅 Railway (Docker-based)</summary>
 
