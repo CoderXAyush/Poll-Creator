@@ -34,8 +34,8 @@ docker compose up --build -d
 
 | Service  | URL                     |
 | -------- | ----------------------- |
-| App      | http://localhost:3000    |
-| API      | http://localhost:5000    |
+| App      | http://localhost:3001    |
+| API      | http://localhost:5001    |
 
 ### Stop
 
@@ -58,7 +58,7 @@ GET    /api/health           Health check
 ### Example — Create a Poll
 
 ```bash
-curl -X POST http://localhost:5000/api/polls \
+curl -X POST http://localhost:5001/api/polls \
   -H "Content-Type: application/json" \
   -d '{"question": "Tabs or spaces?", "options": ["Tabs", "Spaces"]}'
 ```
@@ -103,5 +103,5 @@ npm install
 npm run dev
 ```
 
-Vite dev server proxies `/api` requests to `localhost:5000`.
+Vite dev server proxies `/api` requests to `localhost:5001`.
 
