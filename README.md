@@ -1,5 +1,7 @@
 # Poll Creator
 
+[![CI/CD Pipeline](https://github.com/CoderXAyush/Poll-Creator/actions/workflows/ci.yml/badge.svg)](https://github.com/CoderXAyush/Poll-Creator/actions/workflows/ci.yml)
+
 A full-stack polling application built with **Go** and **React**. Create polls, share them via link, and collect votes with real-time results visualization.
 
 ## Tech Stack
