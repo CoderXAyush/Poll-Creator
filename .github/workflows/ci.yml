@@ -99,6 +99,41 @@ jobs:
         docker stop poll-test
         docker rm poll-test
 
+  vercel-config:
+    name: Vercel Configuration Test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    
+    - name: Install Vercel CLI
+      run: npm install -g vercel@latest
+    
+    - name: Validate Vercel Configuration
+      run: |
+        # Check vercel.json syntax
+        node -e "JSON.parse(require('fs').readFileSync('vercel.json', 'utf8'))"
+        echo "✅ vercel.json is valid JSON"
+        
+        # Check API directory structure
+        if [ -d "api" ]; then
+          echo "✅ API directory exists"
+        else
+          echo "❌ API directory missing" && exit 1
+        fi
+        
+        # Check frontend build configuration
+        if [ -f "frontend/package.json" ]; then
+          echo "✅ Frontend package.json exists"
+        else
+          echo "❌ Frontend package.json missing" && exit 1
+        fi
+
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest

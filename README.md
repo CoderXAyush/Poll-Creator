@@ -109,64 +109,77 @@ Vite dev server proxies `/api` requests to `localhost:5001`.
 
 ## 🚀 Deployment
 
-### Deploy to Railway
+### Deploy to Vercel (Recommended)
 
-Railway provides the easiest deployment for this Docker-based application:
+Vercel provides excellent support for React applications with serverless backend functions:
 
-#### Quick Deploy (Recommended)
+#### Quick Deploy
 ```bash
 # Run our automated deployment script
-./scripts/deploy-railway.sh
+./scripts/deploy-vercel.sh
 ```
 
 #### Manual Deploy
-1. **Create Railway Account**
-   - Go to [railway.app](https://railway.app)
+1. **Create Vercel Account**
+   - Go to [vercel.com](https://vercel.com)
    - Sign up with your GitHub account
 
 2. **Deploy Your Repository**
    ```bash
-   # Option 1: Deploy from GitHub (Recommended)
-   # Connect your GitHub repo at railway.app/new
+   # Option 1: Import from GitHub (Recommended)
+   # Go to vercel.com/new and import your GitHub repository
+   # Vercel will automatically detect the configuration
 
-   # Option 2: Deploy using Railway CLI
-   npm install -g @railway/cli
-   railway login
-   railway init
-   railway up
+   # Option 2: Deploy using Vercel CLI
+   npm install -g vercel
+   vercel login
+   vercel --confirm
+   vercel --prod
    ```
 
-3. **Configure Environment Variables**
-   - In Railway dashboard, go to your project
-   - Add these environment variables:
-     - `PORT=8080`
-     - `NODE_ENV=production`
+3. **Automatic Configuration**
+   - Vercel automatically detects the `vercel.json` configuration
+   - Frontend is built and deployed from `/frontend`  
+   - Backend API functions are deployed from `/api`
+   - No additional environment variables needed!
 
 4. **Your App Will Be Live!**
-   - Railway provides a public URL like `https://poll-creator-production.up.railway.app`
-   - The app serves both frontend and API from the same URL
+   - Vercel provides a public URL like `https://poll-creator-username.vercel.app`
+   - Frontend and API are served from the same domain
+   - Automatic HTTPS and global CDN included
+
+### Alternative Deployment Options
 
 ### Alternative Deployment Options
 
 <details>
-<summary>🔧 Render</summary>
+<summary>🚅 Railway (Docker-based)</summary>
 
-1. Connect your GitHub repo to [Render](https://render.com)
-2. Choose "Web Service"
-3. Set build command: `docker build -f Dockerfile.production .`
-4. Set start command: `./start.sh`
-5. Add environment variable: `PORT=10000`
+1. Connect your GitHub repo to [Railway](https://railway.app)
+2. Railway will use the `Dockerfile.production` for deployment
+3. Set environment variables: `PORT=8080`, `NODE_ENV=production`
+4. Single container serves both frontend and backend
 
 </details>
 
 <details>
-<summary>🌊 DigitalOcean App Platform</summary>
+<summary>🔧 Render</summary>
 
-1. Create a new app in [DigitalOcean](https://cloud.digitalocean.com/apps)
-2. Connect your GitHub repository
-3. Choose "Dockerfile" build method
-4. Set Dockerfile path: `Dockerfile.production`
-5. Configure environment variables as needed
+1. Connect your GitHub repo to [Render](https://render.com)  
+2. Create a "Web Service"
+3. Choose "Static Site" for frontend deployment
+4. Choose "Web Service" with Docker for full-stack deployment
+5. Use `Dockerfile.production` for build
+
+</details>
+
+<details> 
+<summary>🌊 Netlify</summary>
+
+1. Connect your GitHub repo to [Netlify](https://netlify.com)
+2. Set build directory: `frontend/dist`
+3. Set build command: `cd frontend && npm run build`
+4. For API, use Netlify Functions (requires code adaptation)
 
 </details>
 
