@@ -8,12 +8,6 @@ backend/poll-api
 # Environment
 .env
 .env.*
-.env.production
-.env.railway
-.env.local
-
-# Vercel
-.vercel
 
 # OS
 .DS_Store
@@ -31,7 +25,6 @@ docker-compose.override.yml
 
 # Go
 backend/vendor/
-api/vendor/
 *.exe
 *.test
 *.out
